@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+redrixx/bliss/bliss/BuildConfig.java
+ redrixx.bliss.bliss.BuildConfig

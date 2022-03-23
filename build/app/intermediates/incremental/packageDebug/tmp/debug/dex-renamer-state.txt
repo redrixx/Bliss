@@ -1,0 +1,4 @@
+#Tue Mar 22 19:46:56 CDT 2022
+base.0=C\:\\Users\\Hoodlumm5320\\StudioProjects\\Bliss\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
