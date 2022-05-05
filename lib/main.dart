@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'browse.dart';
+import 'home.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,9 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Home'),
               onTap: () {
                 // Update the state of the app
-                _body = Container(color: Colors.black ,child: Center(
-                    child: Text('Home not implemented.', style: TextStyle(color: Colors.white, fontSize: 16.0))
-                ));
+                _body = home();
                 _appbar = 'Bliss - Home';
                 setState(() {});
                 // Then close the drawer
