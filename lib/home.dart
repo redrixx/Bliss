@@ -30,9 +30,6 @@ class _home extends State<home> {
   void initState(){
     super.initState();
     _mainStream = mainClient.from('media-catalog').stream(['id']).order('created', ascending: false).execute();
-
-    _featured = mainClient.from('media-specialty').select().textSearch('name', "'Featured'").execute();
-
   }
 
   @override
@@ -40,7 +37,7 @@ class _home extends State<home> {
     super.dispose();
   }
 
-  _recentlyBuilder(int index, AsyncSnapshot catalogSnapshot){
+  _homeBuilder(int index, AsyncSnapshot snapshot){
     return GestureDetector(
       child: Container(
         padding: EdgeInsets.all(5.0),
@@ -53,7 +50,7 @@ class _home extends State<home> {
             Expanded(child: Image.asset('bliss-logo.png', width: 95, height: 95, color: Colors.primaries[Random().nextInt(Colors.primaries.length)])),
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
-              child: FittedBox(child: Text('${catalogSnapshot.data[index]['name']}', style: TextStyle(color: Colors.black))),
+              child: FittedBox(child: Text('${snapshot.data[index]['name']}', style: TextStyle(color: Colors.black))),
               )
           ],
         )
@@ -62,7 +59,7 @@ class _home extends State<home> {
       onTap: () {
         setState((){
           entryIndex = index;
-          final res = mainClient.storage.from('media-bucket').getPublicUrl('${catalogSnapshot.data[index]['bucketid']}');
+          final res = mainClient.storage.from('media-bucket').getPublicUrl('${snapshot.data[index]['bucketid']}');
           final publicURL = res.data;
 
           _mainPlayer.open(Audio.network('${publicURL}'), showNotification: true
@@ -73,6 +70,13 @@ class _home extends State<home> {
   }
 
   HOMESCREEN(AsyncSnapshot snapshot){
+
+    for(int index = 0; index < snapshot.data.length; index++){
+      if(snapshot.data[index]['sp_flag'].toString().contains('f')){
+        _featured = snapshot.data[index];
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: ListView(
@@ -80,16 +84,15 @@ class _home extends State<home> {
           Column(
             children: [
 
+              // Featured Header
               Container(
                 padding: EdgeInsets.all(5.0),
                 alignment: Alignment.centerLeft,
                 height: _deviceHeight * 0.05,
-                child: Text(
-                    "Featured",
-                    style: TextStyle(color: Colors.white, fontSize: 20.0)
-                ),
+                child: Text("Featured", style: TextStyle(color: Colors.white, fontSize: 20.0)),
               ),
 
+              // Featured Display & Banner
               Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
@@ -100,37 +103,64 @@ class _home extends State<home> {
                     height: _deviceHeight * 0.30,
                     child: Image.asset('bliss-logo.png', width: double.maxFinite, height: double.maxFinite, color: Colors.amber),
                   ),
+
                   Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(5.0),
                     alignment: Alignment.bottomCenter,
-                    child: Text(_featured.toString(), style: TextStyle(color: Colors.black, fontSize: 20.0)),
+                    child: Text(_featured['name'].toString(), style: TextStyle(color: Colors.black, fontSize: 20.0)),
                   ),
                 ],
               ),
 
+              // Recently Added Header
               Container(
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(10.0),
                 alignment: Alignment.centerLeft,
                 height: _deviceHeight * 0.05,
-                child: Text(
-                  "Recently Added",
-                  style: TextStyle(color: Colors.white, fontSize: 20.0)
-                ),
+                child: Text("Recently Added", style: TextStyle(color: Colors.white, fontSize: 18.0)),
               ),
-  
+
+              // Recently Added List (Most Recent Twenty Here)
               Container(
-                height: _deviceHeight * 0.20,
+                height: _deviceHeight * 0.25,
                 child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (BuildContext context, int index) {
                       return SizedBox(width: 10.0);
                     },
                     padding: EdgeInsets.all(10.0),
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data.length - 1 < 20 ? snapshot.data.length : 20,
                     itemBuilder: (BuildContext context, int index) {
-                      return _recentlyBuilder(index, snapshot);
+                      return _homeBuilder(index, snapshot);
                     },
+                ),
+              ),
+
+              // Developer's Picks Header
+              Container(
+                padding: EdgeInsets.all(10.0),
+                alignment: Alignment.centerLeft,
+                height: _deviceHeight * 0.05,
+                child: Text("Developer's Picks", style: TextStyle(color: Colors.white, fontSize: 18.0)),
+              ),
+
+              // Developer's Picks (Only Five AT MOST)
+              Container(
+                height: _deviceHeight * 0.25,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(width: 10.0);
+                  },
+                  padding: EdgeInsets.all(10.0),
+                  itemCount: snapshot.data.length - 1 < 5 ? snapshot.data.length : 5,
+                  itemBuilder: (BuildContext context, int index) {
+                    if(snapshot.data[index]['sp_flag'].toString().contains('dp')) {
+                      return _homeBuilder(index, snapshot);
+                    }
+                    return SizedBox.shrink();
+                  },
                 ),
               ),
 
