@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
+import 'player.dart';
+
 final mainClient = SupabaseClient(
     'https://srivnnrbfwgahaejaeic.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaXZubnJiZndnYWhhZWphZWljIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDc1NjEzMDgsImV4cCI6MTk2MzEzNzMwOH0.wkphUMJcDNu5midB_2SBiBXSsugeT7-PX65l2xwyfOY'
@@ -24,7 +26,6 @@ class home extends StatefulWidget {
 class _home extends State<home> {
   int entryIndex = -1;
   Stream _mainStream = Stream.empty();
-  AssetsAudioPlayer _mainPlayer = AssetsAudioPlayer();
 
   @override
   void initState(){
@@ -44,7 +45,7 @@ class _home extends State<home> {
         alignment: Alignment.center,
         height: 125,
         width: 125,
-        color: entryIndex == index ? Colors.lightBlue : Colors.grey,
+        color: Colors.grey,
         child: Column(
           children: [
             Expanded(child: Image.asset('bliss-logo.png', width: 95, height: 95, color: Colors.primaries[Random().nextInt(Colors.primaries.length)])),
@@ -62,8 +63,13 @@ class _home extends State<home> {
           final res = mainClient.storage.from('media-bucket').getPublicUrl('${snapshot.data[index]['bucketid']}');
           final publicURL = res.data;
 
-          _mainPlayer.open(Audio.network('${publicURL}'), showNotification: true
+          universalPlayer.player.open(Audio.network('${publicURL}', metas: Metas(
+              title: snapshot.data[index]['name'],
+              artist: snapshot.data[index]['category'],
+              image: MetasImage.asset('bliss-logo.png'))),
+              showNotification: true
           );
+
         });
       },
     );
@@ -163,11 +169,8 @@ class _home extends State<home> {
                   },
                 ),
               ),
-
-          ],
-        ),
-      ],
-    ),
+          ])
+      ])
     );
   }
 
@@ -189,13 +192,6 @@ class _home extends State<home> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: HOMESCREEN(snapshot),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _mainPlayer.playOrPause();
-                },
-                backgroundColor: Colors.lightBlue,
-                child: const Icon(Icons.music_note),
               ),
             );
           } else {

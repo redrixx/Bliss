@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'browse.dart';
 import 'home.dart';
+import 'player.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -135,6 +136,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          universalPlayer.player.playOrPause();
+        },
+        backgroundColor: Colors.lightBlue,
+        child: const Icon(Icons.music_note),
       ),
     );
   }

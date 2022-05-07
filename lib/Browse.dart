@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
+import 'player.dart';
+
 final mainClient = SupabaseClient(
     'https://srivnnrbfwgahaejaeic.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaXZubnJiZndnYWhhZWphZWljIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDc1NjEzMDgsImV4cCI6MTk2MzEzNzMwOH0.wkphUMJcDNu5midB_2SBiBXSsugeT7-PX65l2xwyfOY'
@@ -16,7 +18,6 @@ class browse extends StatefulWidget {
 
 class _browse extends State<browse> {
   Stream _mainStream = Stream.empty();
-  AssetsAudioPlayer _mainPlayer = AssetsAudioPlayer();
   int entryIndex = -1;
   TextEditingController searchController = TextEditingController();
   TextEditingController notesController = TextEditingController(text: 'Notes...');
@@ -72,8 +73,13 @@ class _browse extends State<browse> {
             final res = mainClient.storage.from('media-bucket').getPublicUrl('${catalogSnapshot.data[index]['bucketid']}');
             final publicURL = res.data;
 
-            _mainPlayer.open(Audio.network('${publicURL}'), showNotification: true
+            universalPlayer.player.open(Audio.network('${publicURL}', metas: Metas(
+                title: catalogSnapshot.data[index]['name'],
+                artist: catalogSnapshot.data[index]['category'],
+                image: MetasImage.asset('bliss-logo.png'))),
+                showNotification: true
             );
+
           });
         },
       ),
@@ -145,13 +151,6 @@ class _browse extends State<browse> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: CATALOG_LIST(snapshot),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _mainPlayer.playOrPause();
-                },
-                backgroundColor: Colors.lightBlue,
-                child: const Icon(Icons.music_note),
               ),
             );
           } else {
