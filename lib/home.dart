@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
-import 'player.dart';
+import 'uvplayer.dart';
 
 final mainClient = SupabaseClient(
     'https://srivnnrbfwgahaejaeic.supabase.co',

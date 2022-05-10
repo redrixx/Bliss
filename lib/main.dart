@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'browse.dart';
 import 'home.dart';
-import 'player.dart';
+import 'browse.dart';
+import 'upload.dart';
+import 'uvplayer.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -119,9 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Upload'),
               onTap: (){
                 // Update the state of the app
-                _body = Container(color: Colors.black ,child: Center(
-                    child: Text('Upload not implemented.', style: TextStyle(color: Colors.white, fontSize: 16.0))
-                ));
+                _body = upload();
                 _appbar = 'Bliss - Upload';
                 setState(() {});
                 // Then close the drawer

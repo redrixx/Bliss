@@ -1,6 +1,8 @@
 # This is a generated file; do not edit or check into version control.
 assets_audio_player=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\assets_audio_player-3.0.4+1\\
 assets_audio_player_web=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\assets_audio_player_web-3.0.4+1\\
+file_picker=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\file_picker-4.4.0\\
+flutter_plugin_android_lifecycle=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_plugin_android_lifecycle-2.0.5\\
 path_provider=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider-2.0.9\\
 path_provider_android=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_android-2.0.11\\
 path_provider_ios=C:\\Tools\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_ios-2.0.7\\

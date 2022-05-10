@@ -93,6 +93,13 @@
             </list>
           </value>
         </entry>
+        <entry key="file_picker">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/file_picker-4.4.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter">
           <value>
             <list>
@@ -104,6 +111,13 @@
           <value>
             <list>
               <option value="$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-1.0.4/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_plugin_android_lifecycle">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/lib" />
             </list>
           </value>
         </entry>
@@ -515,7 +529,9 @@
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/ffi-1.1.2/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/file-6.1.2/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/file_picker-4.4.0/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-1.0.4/lib" />
+      <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/gotrue-0.1.6/lib" />
       <root url="file://$PROJECT_DIR$/../../../../Tools/flutter/.pub-cache/hosted/pub.dartlang.org/hive-2.1.0/lib" />

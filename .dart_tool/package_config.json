@@ -80,6 +80,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "file_picker",
+      "rootUri": "file:///C:/Tools/flutter/.pub-cache/hosted/pub.dartlang.org/file_picker-4.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///C:/Tools/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -88,6 +94,12 @@
     {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///C:/Tools/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -434,7 +446,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-05-05T23:48:57.365783Z",
+  "generated": "2022-05-09T23:26:47.392405Z",
   "generator": "pub",
   "generatorVersion": "2.14.2"
 }
