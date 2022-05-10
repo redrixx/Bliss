@@ -1,2 +1,3 @@
 /build
-/.dart-tool
+/.dart_tool
+/android
