@@ -138,10 +138,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          if(universalPlayer.playerIcon.icon != Icons.music_note){
+            if(universalPlayer.playerIcon.icon == Icons.play_arrow){
+              universalPlayer.playerIcon = Icon(Icons.pause);
+            }else{
+              universalPlayer.playerIcon = Icon(Icons.play_arrow);
+            }
+          }
           universalPlayer.player.playOrPause();
+          setState(() {});
         },
         backgroundColor: Colors.lightBlue,
-        child: const Icon(Icons.music_note),
+        child: universalPlayer.playerIcon,
       ),
     );
   }

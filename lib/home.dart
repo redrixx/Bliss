@@ -69,6 +69,8 @@ class _home extends State<home> {
               image: MetasImage.asset('bliss-logo.png'))),
               showNotification: true
           );
+          universalPlayer.playerIcon = Icon(Icons.pause);
+          setState(() {});
 
         });
       },

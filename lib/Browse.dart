@@ -79,6 +79,8 @@ class _browse extends State<browse> {
                 image: MetasImage.asset('bliss-logo.png'))),
                 showNotification: true
             );
+            universalPlayer.playerIcon = Icon(Icons.pause);
+            setState(() {});
 
           });
         },
