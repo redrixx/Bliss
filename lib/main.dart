@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'home.dart';
 import 'browse.dart';
 import 'upload.dart';
+import 'player.dart';
 import 'uvplayer.dart';
 
 Future<void> main() async{
@@ -46,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ));
 
   String _appbar = 'Bliss - Intro';
-  String _version = '0.1a';
+  String _version = '0.2a';
 
   @override
   Widget build(BuildContext context) {
@@ -105,11 +109,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text('Play'),
-              onTap: (){
+              onTap: () async {
+                Directory _blissPath = await getApplicationDocumentsDirectory();
+                Directory('$_blissPath').list(recursive: false).forEach((f) {
+                  print(f);
+                });
                 // Update the state of the app
-                _body = Container(color: Colors.black ,child: Center(
-                    child: Text('Play not implemented.', style: TextStyle(color: Colors.white, fontSize: 16.0))
-                ));
+                _body = play(blissPath: _blissPath.path);
                 _appbar = 'Bliss - Play';
                 setState(() {});
                 // Then close the drawer
