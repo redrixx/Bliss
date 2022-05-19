@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -5,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
+import 'main.dart';
 import 'uvplayer.dart';
 
 final mainClient = SupabaseClient(
@@ -56,6 +62,22 @@ class _browse extends State<browse> {
     setState(() {});
   }
 
+  addLocalEntry(int index, AsyncSnapshot catalogSnapshot) async {
+    Directory _blissPath = await getApplicationDocumentsDirectory();
+    bool localExists = await Directory('${_blissPath.path}/local_catalog').exists();
+
+    if(!localExists){
+      new Directory('${_blissPath.path}/local_catalog').create();
+    }
+
+    final res = await mainClient.storage.from('media-bucket').getPublicUrl('${catalogSnapshot.data[index]['bucketid']}');
+    final publicURL = res.data;
+    var response = await http.get(Uri.parse(publicURL!));
+    final file = new File(join('${_blissPath.path}/local_catalog', '${catalogSnapshot.data[index]['bucketid']}'));
+    file.writeAsBytesSync(response.bodyBytes);
+
+  }
+
   _catalogBuilder(int index, AsyncSnapshot catalogSnapshot){
     return Container(
       alignment: Alignment.center,
@@ -65,6 +87,7 @@ class _browse extends State<browse> {
         leading: Text('${catalogSnapshot.data[index]['type']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         title: Text('${catalogSnapshot.data[index]['name']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         subtitle: Text('${catalogSnapshot.data[index]['category']}', style: TextStyle(color: Colors.black)),
+        trailing: IconButton(icon: Icon(Icons.add), color: Colors.black, onPressed: () async { await addLocalEntry(index, catalogSnapshot); },),
         isThreeLine: true,
         dense: true,
         onTap: () {
@@ -109,7 +132,7 @@ class _browse extends State<browse> {
           ),
 
           Container(
-            height: MediaQuery.of(context).size.height - 180,
+            height: MediaQuery.of(this.context).size.height - 180,
             child: ListView.separated(
                 separatorBuilder: (BuildContext context, int index) {
                   if(  catalogSnapshot.data[index]['type'].toString().toLowerCase().contains(searchController.text.toLowerCase())

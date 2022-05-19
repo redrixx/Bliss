@@ -50,7 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
   ));
 
   String _appbar = 'Bliss - Intro';
-  String _version = '0.2a';
+  String _version = '0.4a';
+
+  _update(){
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,11 +115,14 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Play'),
               onTap: () async {
                 Directory _blissPath = await getApplicationDocumentsDirectory();
-                Directory('$_blissPath').list(recursive: false).forEach((f) {
-                  print(f);
-                });
+                bool localExists = await Directory('${_blissPath.path}/local_catalog').exists();
+
+                if(!localExists){
+                  new Directory('${_blissPath.path}/local_catalog').create();
+                }
+
                 // Update the state of the app
-                _body = play(blissPath: _blissPath.path);
+                _body = play(blissPath: '${_blissPath.path}/local_catalog');
                 _appbar = 'Bliss - Play';
                 setState(() {});
                 // Then close the drawer

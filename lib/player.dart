@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -49,17 +50,15 @@ class _play extends State<play> {
     super.dispose();
     searchController.removeListener(_updateSearch);
     searchController.dispose();
+    _localCatalog.clear();
   }
 
-  void saveFile(){
-    File file = File('$_blissPath/blisstest.txt');
-    file.writeAsString("This is my demo text that will be saved to : demoTextFile.txt");
-  }
-  void readFile() async {
-    File file = File('$_blissPath/blisstest.txt');
-    String fileContent = await file.readAsString();
-
-    print('File Content: $fileContent');
+  _readLocal(AsyncSnapshot catalogSnapshot) async{
+    await Directory(_blissPath).list(recursive: false).forEach((f) {
+      _localCatalog.add(basename(f.path));
+    });
+    print(_localCatalog);
+    _updateSearch();
   }
 
   _updateSearch(){
@@ -80,10 +79,8 @@ class _play extends State<play> {
         onTap: () {
           setState((){
             entryIndex = index;
-            final res = mainClient.storage.from('media-bucket').getPublicUrl('${catalogSnapshot.data[index]['bucketid']}');
-            final publicURL = res.data;
 
-            universalPlayer.player.open(Audio.network('${publicURL}', metas: Metas(
+            universalPlayer.player.open(Audio.file('${_blissPath}/${catalogSnapshot.data[index]['bucketid']}', metas: Metas(
                 title: catalogSnapshot.data[index]['name'],
                 artist: catalogSnapshot.data[index]['category'],
                 image: MetasImage.asset('bliss-logo.png'))),
@@ -103,7 +100,7 @@ class _play extends State<play> {
       padding: const EdgeInsets.all(5.0),
       child: Column(
         children: [
-          Container(
+/*          Container(
             height: 50,
             child: TextField(
               controller: searchController,
@@ -116,16 +113,13 @@ class _play extends State<play> {
                       borderRadius: BorderRadius.all(Radius.circular(25.0)))
               ),
             ),
-          ),
+          ),*/
 
           Container(
-            height: MediaQuery.of(context).size.height - 180,
+            height: MediaQuery.of(this.context).size.height - 180,
             child: ListView.separated(
                 separatorBuilder: (BuildContext context, int index) {
-                  if(  catalogSnapshot.data[index]['type'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                      || catalogSnapshot.data[index]['category'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                      || catalogSnapshot.data[index]['name'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                  ){
+                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString().toLowerCase())){
                     return SizedBox(height: 5.0);
                   }
                   return SizedBox.shrink();
@@ -133,10 +127,7 @@ class _play extends State<play> {
                 padding: EdgeInsets.all(5.0),
                 itemCount: catalogSnapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if(  catalogSnapshot.data[index]['type'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                      || catalogSnapshot.data[index]['category'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                      || catalogSnapshot.data[index]['name'].toString().toLowerCase().contains(searchController.text.toLowerCase())
-                  ){
+                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString().toLowerCase())){
                     return _catalogBuilder(index, catalogSnapshot);
                   }
                   return SizedBox.shrink();
@@ -153,9 +144,6 @@ class _play extends State<play> {
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    print(_blissPath);
-    //saveFile();
-    //readFile();
 
     return StreamBuilder(
         stream: _mainStream,
@@ -163,6 +151,7 @@ class _play extends State<play> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(backgroundColor: Colors.black ,body: Center(child: CircularProgressIndicator(color: Colors.lightBlue)));
           } else if (snapshot.hasData) {
+            _readLocal(snapshot);
             return Scaffold(
               body: Container(
                 decoration: const BoxDecoration(color: Colors.black),

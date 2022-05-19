@@ -162,7 +162,7 @@ class _home extends State<home> {
                     return SizedBox(width: 10.0);
                   },
                   padding: EdgeInsets.all(10.0),
-                  itemCount: snapshot.data.length - 1 < 5 ? snapshot.data.length : 5,
+                  itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     if(snapshot.data[index]['sp_flag'].toString().contains('dp')) {
                       return _homeBuilder(index, snapshot);
