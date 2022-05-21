@@ -43,24 +43,24 @@ class _upload extends State<upload> {
     filenameController.dispose();
   }
 
-  Future<void> _showDialog() async {
+  Future<void> _showDialog(String messageName, String firstLine, String secondLine) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Success!'),
+          title: Text(messageName),
           content: SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
-                Text('Upload successful.'),
-                Text('Thank you for your contributions.'),
+              children: <Widget>[
+                Text(firstLine),
+                Text(secondLine),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Close'),
+              child: const Text('Ok'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -178,9 +178,13 @@ class _upload extends State<upload> {
                           'name': nameController.text
                         }]).execute();
                         await mainClient.storage.from('media-bucket').upload('${filenameController.text}.mp3', _file);
-                        _showDialog();
+                        _showDialog('Success!', 'Upload successful.', 'Thank you for your contributions.');
+                      }else if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
+                      }else if(_file == null){
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no valid file selected.');
                       }else{
-                        print("No valid file selected.");
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'An error occurred.');
                       }
                     }),
 

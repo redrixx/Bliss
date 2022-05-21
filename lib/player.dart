@@ -57,7 +57,7 @@ class _play extends State<play> {
     await Directory(_blissPath).list(recursive: false).forEach((f) {
       _localCatalog.add(basename(f.path));
     });
-    print(_localCatalog);
+    //print(_localCatalog);
     _updateSearch();
   }
 
