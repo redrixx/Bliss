@@ -71,6 +71,18 @@ class _upload extends State<upload> {
     );
   }
 
+  bool _filenameCheck(snapshot){
+    bool returnVal = false;
+
+    for(int index = 0; index < snapshot.data.length; index++){
+      if(snapshot.data[index]['bucketid'].toString().toLowerCase().contains('${filenameController.text.toLowerCase()}.mp3')){
+        returnVal = true;
+      }
+    }
+
+    return returnVal;
+  }
+
   UPLOAD(AsyncSnapshot snapshot){
     return Padding(
         padding: const EdgeInsets.all(5.0),
@@ -170,7 +182,13 @@ class _upload extends State<upload> {
 
                     // Upload Button
                     TextButton(child: Text("UPLOAD TO BLISS"), onPressed: () async {
-                      if(_file != null){
+                      if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
+                      }else if(filenameController.text.contains(' ') || _filenameCheck(snapshot)){
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'Invalid filename (it either already exists or has invalid characters).');
+                      }else if(_file == null){
+                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no valid file selected.');
+                      }else{
                         await mainClient.from('media-catalog').insert([{
                           'bucketid': '${filenameController.text}.mp3',
                           'type': typeController.text,
@@ -179,12 +197,11 @@ class _upload extends State<upload> {
                         }]).execute();
                         await mainClient.storage.from('media-bucket').upload('${filenameController.text}.mp3', _file);
                         _showDialog('Success!', 'Upload successful.', 'Thank you for your contributions.');
-                      }else if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
-                      }else if(_file == null){
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no valid file selected.');
-                      }else{
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'An error occurred.');
+                        typeController.clear();
+                        categoryController.clear();
+                        nameController.clear();
+                        filenameController.clear();
+                        _file == null;
                       }
                     }),
 
