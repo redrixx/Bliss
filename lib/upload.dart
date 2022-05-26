@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -16,6 +17,19 @@ var _deviceHeight;
 var _deviceWidth;
 
 var _file;
+List<String> _typeSuggest = <String>[];
+List<String> _categorySuggest = <String>[];
+
+_blissInputDecoration(String _hint){
+  return InputDecoration(
+      hintText: _hint,
+      prefixIcon: Icon(Icons.search),
+      fillColor: Colors.white,
+      filled: true,
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)))
+  );
+}
 
 class upload extends StatefulWidget {
   _upload createState() => _upload();
@@ -41,7 +55,25 @@ class _upload extends State<upload> {
     categoryController.dispose();
     nameController.dispose();
     filenameController.dispose();
+    _typeSuggest.clear();
+    _categorySuggest.clear();
   }
+
+  getAutoComplete(AsyncSnapshot snapshot){
+    for(var entry in snapshot.data){
+      _typeSuggest.add(entry['type']);
+      _categorySuggest.add(entry['category']);
+    }
+    _typeSuggest = _typeSuggest.toSet().toList();
+    _categorySuggest = _categorySuggest.toSet().toList();
+  }
+
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(
+      Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)))
+  );
 
   Future<void> _showDialog(String messageName, String firstLine, String secondLine) async {
     return showDialog<void>(
@@ -91,38 +123,64 @@ class _upload extends State<upload> {
               Column(
                   children: [
 
-                    // Type Box
+                    // Type Autocomplete Box
                     Container(
-                      margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                      height: 50,
-                      child: TextField(
-                        controller: typeController,
-                        decoration: InputDecoration(
-                            hintText: "Type",
-                            prefixIcon: Icon(Icons.search),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                        ),
-                      ),
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        height: 50,
+                        child: Autocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            if (textEditingValue.text == '') {
+                              return const Iterable<String>.empty();
+                            }
+                            return _typeSuggest.where((String current) {
+                              return current.toString().contains(textEditingValue.text);
+                            });
+                          },
+                          fieldViewBuilder: (BuildContext context, TextEditingController typeController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                            return TextFormField(
+                              controller: typeController,
+                              decoration: _blissInputDecoration('Type'),
+                              focusNode: focusNode,
+                              onFieldSubmitted: (String value) {
+                                onFieldSubmitted();
+                                this.typeController.text = value;
+                              },
+                            );
+                          },
+                          onSelected: (String selection) {
+                            typeController.text = selection;
+                          },
+                        )
                     ),
 
-                    // Category Box
+                    // Category Autocomplete Box
                     Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      height: 50,
-                      child: TextField(
-                        controller: categoryController,
-                        decoration: InputDecoration(
-                            hintText: "Category",
-                            prefixIcon: Icon(Icons.search),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                        ),
-                      ),
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        height: 50,
+                        child: Autocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+                            if (textEditingValue.text == '') {
+                              return const Iterable<String>.empty();
+                            }
+                            return _categorySuggest.where((String current) {
+                              return current.toString().contains(textEditingValue.text);
+                            });
+                          },
+                          fieldViewBuilder: (BuildContext context, TextEditingController categoryController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                            return TextFormField(
+                              controller: categoryController,
+                              decoration: _blissInputDecoration('Category'),
+                              focusNode: focusNode,
+                              onFieldSubmitted: (String value) {
+                                onFieldSubmitted();
+                                this.categoryController.text = value;
+                              },
+                            );
+                          },
+                          onSelected: (String selection) {
+                            categoryController.text = selection;
+                          },
+                        )
                     ),
 
                     // Name Box
@@ -131,33 +189,19 @@ class _upload extends State<upload> {
                       height: 50,
                       child: TextField(
                         controller: nameController,
-                        decoration: InputDecoration(
-                            hintText: "Name",
-                            prefixIcon: Icon(Icons.search),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                        ),
+                        decoration: _blissInputDecoration('Name'),
                       ),
                     ),
 
-                    // Filename Box
+/*                    // Filename Box
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       height: 50,
                       child: TextField(
                         controller: filenameController,
-                        decoration: InputDecoration(
-                            hintText: "Filename (must be unique)",
-                            prefixIcon: Icon(Icons.search),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                        ),
+                        decoration: _blissInputDecoration('Filename (must be unique)'),
                       ),
-                    ),
+                    ),*/
 
                     // Choose File Button
                     Container(
@@ -182,6 +226,7 @@ class _upload extends State<upload> {
 
                     // Upload Button
                     TextButton(child: Text("UPLOAD TO BLISS"), onPressed: () async {
+                      filenameController.text = getRandomString(20);
                       if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
                         _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
                       }else if(filenameController.text.contains(' ') || _filenameCheck(snapshot)){
@@ -224,6 +269,7 @@ class _upload extends State<upload> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(backgroundColor: Colors.black ,body: Center(child: CircularProgressIndicator(color: Colors.lightBlue)));
           } else if (snapshot.hasData) {
+            getAutoComplete(snapshot);
             return Scaffold(
               body: Container(
                 decoration: const BoxDecoration(color: Colors.black),
