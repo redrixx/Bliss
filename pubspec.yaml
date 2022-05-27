@@ -31,11 +31,11 @@ dependencies:
     sdk: flutter
 
   get: ^4.6.1
-  supabase_flutter: ^0.2.12
+  supabase_flutter: ^0.3.1
   storage_client: ^0.0.6+2
-  assets_audio_player: ^3.0.4+1
-  file_picker: ^4.4.0
-
+  assets_audio_player: ^3.0.4+3
+  file_picker: ^4.6.0
+  flutter_native_splash: ^2.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -56,6 +56,24 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+
+flutter_native_splash:
+
+  # This package generates native code to customize Flutter's default white native splash screen
+  # with background color and splash image.
+  # Customize the parameters below, and run the following command in the terminal:
+  # flutter pub run flutter_native_splash:create
+  # To restore Flutter's default white splash screen, run the following command in the terminal:
+  # flutter pub run flutter_native_splash:remove
+
+  # color or background_image is the only required parameter.  Use color to set the background
+  # of your splash screen to a solid color.  Use background_image to set the background of your
+  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
+  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
+  color: "#42a5f5"
+  image: "lib/bliss-logo.png"
+
+
 flutter:
 
   # The following line ensures that the Material Icons font is

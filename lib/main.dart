@@ -13,6 +13,45 @@ import 'upload.dart';
 import 'player.dart';
 import 'uvplayer.dart';
 
+Widget _body = Container();
+bool _introLaunch = false;
+
+_blissIntro(AnimationController _controller, Animatable<Color?> background){
+  return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Scaffold(
+          body: Container(
+              color: background.evaluate(AlwaysStoppedAnimation(_controller.value)),
+              child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Enter Bliss.', style: TextStyle(color: Colors.white, fontSize: 40.0)),
+                      Image.asset('bliss-logo.png', width: 200, height: 200, color: Colors.white),
+                      Column(children: [
+                        Text('The definitive auditory-response experience.', style: TextStyle(color: Colors.white, fontSize: 12.0), textAlign: TextAlign.center),
+                        Text('Empowered by the community.', style: TextStyle(color: Colors.white, fontSize: 12.0), textAlign: TextAlign.center),
+                        Text('Empowered for the community.', style: TextStyle(color: Colors.white, fontSize: 12.0), textAlign: TextAlign.center),
+                      ],),
+                      Text('Use the navigation button at the top left to get around. Thank you for your support!', style: TextStyle(color: Colors.white, fontSize: 8.0), textAlign: TextAlign.center),
+                    ],
+                  )
+              )
+          ),
+        );
+      }
+  );
+}
+
+_firstLaunch() async {
+  Directory _blissPath = await getApplicationDocumentsDirectory();
+  bool localExists = await Directory('${_blissPath.path}/local_catalog').exists();
+  if(!localExists){
+    _introLaunch = true;
+  }
+}
+
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -42,15 +81,58 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
   State<MyHomePage> createState() => _MyHomePageState();
+
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  Widget _body = Container(color: Colors.black, child: Center(
-      child: Text('Welcome to Bliss. Reveal the navigation pane at the top left to get started.', style: TextStyle(color: Colors.white, fontSize: 16.0))
-  ));
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+
+  var _controller;
+
+  Animatable<Color?> background = TweenSequence<Color?>([
+    TweenSequenceItem(
+      weight: 1.0,
+      tween: ColorTween(
+        begin: Colors.red,
+        end: Colors.green,
+      ),
+    ),
+    TweenSequenceItem(
+      weight: 1.0,
+      tween: ColorTween(
+        begin: Colors.green,
+        end: Colors.blue,
+      ),
+    ),
+    TweenSequenceItem(
+      weight: 1.0,
+      tween: ColorTween(
+        begin: Colors.blue,
+        end: Colors.pink,
+      ),
+    ),
+  ]);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 10),
+      vsync: this,
+    )..repeat();
+
+    _firstLaunch();
+
+    if(_introLaunch) {
+      _body = _blissIntro(_controller, background);
+    }else{
+      _body = home();
+      _appbar = 'Bliss - Home';
+      setState(() {});
+    }
+  }
 
   String _appbar = 'Bliss - Intro';
-  String _version = '0.4a';
+  String _version = '1.0';
 
   _update(){
     setState(() {});
@@ -59,36 +141,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_appbar),
-        actions: <Widget>[
-
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.refresh,
-          //     color: Colors.black,
-          //   ),
-          //   onPressed: () {
-          //     setState(() {
-          //     });
-          //   },
-          // )
-
-        ],
-      ),
+      appBar: AppBar(),
       body: _body,
       drawer: Drawer(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(10.0),
-              width: double.maxFinite,
-              height: MediaQuery.of(context).size.height * 0.25,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-              ),
-              child: Image.asset('bliss-logo.png'),
-            ),
             ListTile(
               title: const Text('Home'),
               onTap: () {
