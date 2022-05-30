@@ -141,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(),
       body: _body,
       drawer: Drawer(
@@ -208,13 +209,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if(universalPlayer.playerIcon.icon != Icons.music_note){
-            if(universalPlayer.playerIcon.icon == Icons.play_arrow){
-              universalPlayer.playerIcon = Icon(Icons.pause);
-            }else{
-              universalPlayer.playerIcon = Icon(Icons.play_arrow);
-            }
-          }
           universalPlayer.player.playOrPause();
           setState(() {});
         },

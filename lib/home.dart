@@ -41,17 +41,18 @@ class _home extends State<home> {
   _homeBuilder(int index, AsyncSnapshot snapshot){
     return GestureDetector(
       child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: Colors.grey),
         padding: EdgeInsets.all(5.0),
         alignment: Alignment.center,
         height: 125,
         width: 125,
-        color: Colors.grey,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(child: Image.asset('bliss-logo.png', width: 95, height: 95, color: Colors.primaries[Random().nextInt(Colors.primaries.length)])),
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
-              child: FittedBox(child: Text('${snapshot.data[index]['name']}', style: TextStyle(color: Colors.black))),
+              child: Text('${snapshot.data[index]['name']}', style: TextStyle(color: Colors.black, fontSize: 12.0)),
               )
           ],
         )
@@ -69,7 +70,6 @@ class _home extends State<home> {
               image: MetasImage.asset('bliss-logo.png'))),
               showNotification: true
           );
-          universalPlayer.playerIcon = Icon(Icons.pause);
           setState(() {});
 
         });
@@ -105,8 +105,8 @@ class _home extends State<home> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: Colors.deepPurple),
                     padding: EdgeInsets.all(5.0),
-                    color: Colors.deepPurple,
                     alignment: Alignment.center,
                     height: _deviceHeight * 0.30,
                     child: Image.asset('bliss-logo.png', width: double.maxFinite, height: double.maxFinite, color: Colors.amber),
@@ -131,7 +131,8 @@ class _home extends State<home> {
 
               // Recently Added List (Most Recent Twenty Here)
               Container(
-                height: _deviceHeight * 0.25,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00)),
+                height: _deviceHeight * 0.15,
                 child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (BuildContext context, int index) {
@@ -155,13 +156,13 @@ class _home extends State<home> {
 
               // Developer's Picks (Only Five AT MOST)
               Container(
-                height: _deviceHeight * 0.25,
+                height: _deviceHeight * 0.15,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (BuildContext context, int index) {
                     return SizedBox(width: 10.0);
                   },
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     if(snapshot.data[index]['sp_flag'].toString().contains('dp')) {

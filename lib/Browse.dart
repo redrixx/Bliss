@@ -75,14 +75,13 @@ class _browse extends State<browse> {
     var response = await http.get(Uri.parse(publicURL!));
     final file = new File(join('${_blissPath.path}/local_catalog', '${catalogSnapshot.data[index]['bucketid']}'));
     file.writeAsBytesSync(response.bodyBytes);
-
   }
 
   _catalogBuilder(int index, AsyncSnapshot catalogSnapshot){
     return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: entryIndex == index ? Colors.lightBlue : Colors.grey),
       alignment: Alignment.center,
       height: 80,
-      color: entryIndex == index ? Colors.lightBlue : Colors.grey,
       child: ListTile(
         leading: Text('${catalogSnapshot.data[index]['type']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         title: Text('${catalogSnapshot.data[index]['name']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -102,9 +101,7 @@ class _browse extends State<browse> {
                 image: MetasImage.asset('bliss-logo.png'))),
                 showNotification: true
             );
-            universalPlayer.playerIcon = Icon(Icons.pause);
             setState(() {});
-
           });
         },
       ),
@@ -171,6 +168,7 @@ class _browse extends State<browse> {
             return Scaffold(backgroundColor: Colors.black ,body: Center(child: CircularProgressIndicator(color: Colors.lightBlue)));
           } else if (snapshot.hasData) {
             return Scaffold(
+              resizeToAvoidBottomInset : false,
               body: Container(
                 decoration: const BoxDecoration(color: Colors.black),
                 width: MediaQuery.of(context).size.width,

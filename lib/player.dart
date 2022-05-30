@@ -67,9 +67,9 @@ class _play extends State<play> {
 
   _catalogBuilder(int index, AsyncSnapshot catalogSnapshot){
     return Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: entryIndex == index ? Colors.lightBlue : Colors.grey),
       alignment: Alignment.center,
       height: 80,
-      color: entryIndex == index ? Colors.lightBlue : Colors.grey,
       child: ListTile(
         leading: Text('${catalogSnapshot.data[index]['type']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         title: Text('${catalogSnapshot.data[index]['name']}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -86,7 +86,6 @@ class _play extends State<play> {
                 image: MetasImage.asset('bliss-logo.png'))),
                 showNotification: true
             );
-            universalPlayer.playerIcon = Icon(Icons.pause);
             setState(() {});
 
           });
@@ -116,10 +115,10 @@ class _play extends State<play> {
           ),*/
 
           Container(
-            height: MediaQuery.of(this.context).size.height - 180,
+            height: MediaQuery.of(this.context).size.height - 100,
             child: ListView.separated(
                 separatorBuilder: (BuildContext context, int index) {
-                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString().toLowerCase())){
+                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString())){
                     return SizedBox(height: 5.0);
                   }
                   return SizedBox.shrink();
@@ -127,7 +126,7 @@ class _play extends State<play> {
                 padding: EdgeInsets.all(5.0),
                 itemCount: catalogSnapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString().toLowerCase())){
+                  if(_localCatalog.contains(catalogSnapshot.data[index]['bucketid'].toString())){
                     return _catalogBuilder(index, catalogSnapshot);
                   }
                   return SizedBox.shrink();

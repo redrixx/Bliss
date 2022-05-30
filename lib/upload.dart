@@ -107,7 +107,7 @@ class _upload extends State<upload> {
     bool returnVal = false;
 
     for(int index = 0; index < snapshot.data.length; index++){
-      if(snapshot.data[index]['bucketid'].toString().toLowerCase().contains('${filenameController.text.toLowerCase()}.mp3')){
+      if(snapshot.data[index]['bucketid'].toString().toLowerCase().contains('${filenameController.text}.mp3')){
         returnVal = true;
       }
     }
@@ -205,14 +205,17 @@ class _upload extends State<upload> {
 
                     // Choose File Button
                     Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: Colors.grey),
                       padding: EdgeInsets.all(5.0),
                       alignment: Alignment.center,
-                      height: _deviceHeight * 0.25,
+                      height: _deviceHeight * 0.20,
+                      width: _deviceHeight * 0.20,
                       child: GestureDetector(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.file_upload, size: _deviceHeight * 0.15, color: Colors.white),
+                            Text("CHOOSE FILE")
                           ],
                         ),
                         onTap: () async {
@@ -225,30 +228,34 @@ class _upload extends State<upload> {
                     ),
 
                     // Upload Button
-                    TextButton(child: Text("UPLOAD TO BLISS"), onPressed: () async {
-                      filenameController.text = getRandomString(20);
-                      if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
-                      }else if(filenameController.text.contains(' ') || _filenameCheck(snapshot)){
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'Invalid filename (it either already exists or has invalid characters).');
-                      }else if(_file == null){
-                        _showDialog('Unsuccessful.', 'Upload failed.', 'There is no valid file selected.');
-                      }else{
-                        await mainClient.from('media-catalog').insert([{
-                          'bucketid': '${filenameController.text}.mp3',
-                          'type': typeController.text,
-                          'category': categoryController.text,
-                          'name': nameController.text
-                        }]).execute();
-                        await mainClient.storage.from('media-bucket').upload('${filenameController.text}.mp3', _file);
-                        _showDialog('Success!', 'Upload successful.', 'Thank you for your contributions.');
-                        typeController.clear();
-                        categoryController.clear();
-                        nameController.clear();
-                        filenameController.clear();
-                        _file == null;
-                      }
-                    }),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15.00), color: Colors.grey),
+                      child: TextButton(child: Text("UPLOAD TO BLISS", style: TextStyle(color: Colors.white)), onPressed: () async {
+                        filenameController.text = getRandomString(20);
+                        if(typeController.text == '' || categoryController.text == '' || nameController.text == ''){
+                          _showDialog('Unsuccessful.', 'Upload failed.', 'There is no information entered.');
+                        }else if(filenameController.text.contains(' ') || _filenameCheck(snapshot)){
+                          _showDialog('Unsuccessful.', 'Upload failed.', 'Invalid filename (it either already exists or has invalid characters).');
+                        }else if(_file == null){
+                          _showDialog('Unsuccessful.', 'Upload failed.', 'There is no valid file selected.');
+                        }else{
+                          await mainClient.from('media-catalog').insert([{
+                            'bucketid': '${filenameController.text}.mp3',
+                            'type': typeController.text,
+                            'category': categoryController.text,
+                            'name': nameController.text
+                          }]).execute();
+                          await mainClient.storage.from('media-bucket').upload('${filenameController.text}.mp3', _file);
+                          _showDialog('Success!', 'Upload successful.', 'Thank you for your contributions.');
+                          typeController.clear();
+                          categoryController.clear();
+                          nameController.clear();
+                          filenameController.clear();
+                          _file == null;
+                        }
+                      }),
+                    ),
 
                   ]
               )
